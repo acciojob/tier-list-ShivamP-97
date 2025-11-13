@@ -1,16 +1,12 @@
 const items = document.querySelectorAll('.item');
-
 const dropZones = document.querySelectorAll('.drop-zone');
-
 const unrankedZone = document.getElementById('unranked-drop-zone');
 
 items.forEach(item => {
   item.setAttribute('draggable', true);
 
-  item.addEventListener('dragstart', (e) => {
-    if (!e.dataTransfer) {
-      e.dataTransfer = new DataTransfer();
-    }
+  item.addEventListener('dragstart', e => {
+    if (!e.dataTransfer) e.dataTransfer = new DataTransfer();
     e.dataTransfer.setData('text/plain', e.target.id);
   });
 
@@ -22,18 +18,13 @@ items.forEach(item => {
 });
 
 dropZones.forEach(zone => {
-  zone.addEventListener('dragover', (e) => {
-    e.preventDefault(); 
-  });
-
-  zone.addEventListener('drop', (e) => {
+  zone.addEventListener('dragover', e => e.preventDefault());
+  zone.addEventListener('drop', e => {
     e.preventDefault();
-
-    const draggedId = e.dataTransfer ? e.dataTransfer.getData('text/plain') : null;
+    if (!e.dataTransfer) return;
+    const draggedId = e.dataTransfer.getData('text/plain');
     if (!draggedId) return;
-
     const draggedItem = document.getElementById(draggedId);
-
     if (draggedItem && draggedItem.parentElement !== zone) {
       zone.appendChild(draggedItem);
     }
