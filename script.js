@@ -1,4 +1,3 @@
-//your JS code here. If required.
 const items = document.querySelectorAll('.item');
 
 const dropZones = document.querySelectorAll('.drop-zone');
@@ -9,6 +8,9 @@ items.forEach(item => {
   item.setAttribute('draggable', true);
 
   item.addEventListener('dragstart', (e) => {
+    if (!e.dataTransfer) {
+      e.dataTransfer = new DataTransfer();
+    }
     e.dataTransfer.setData('text/plain', e.target.id);
   });
 
@@ -26,10 +28,13 @@ dropZones.forEach(zone => {
 
   zone.addEventListener('drop', (e) => {
     e.preventDefault();
-    const draggedId = e.dataTransfer.getData('text/plain');
+
+    const draggedId = e.dataTransfer ? e.dataTransfer.getData('text/plain') : null;
+    if (!draggedId) return;
+
     const draggedItem = document.getElementById(draggedId);
 
-    if (draggedItem.parentElement !== zone) {
+    if (draggedItem && draggedItem.parentElement !== zone) {
       zone.appendChild(draggedItem);
     }
   });
